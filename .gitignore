@@ -1,0 +1,10 @@
+*.egg-info/
+*.pyc
+__pycache__/
+multiagent/__pycache__/
+multiagent/scenarios/__pycache__/
+bin/__pycache__/
+bin/maddpg-pytorch/utils/__pycache__/
+bin/maddpg-pytorch/models/
+bin/maddpg-pytorch/run
+bin/maddpg-pytorch/Portal/

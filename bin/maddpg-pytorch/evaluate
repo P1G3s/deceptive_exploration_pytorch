@@ -1,0 +1,4 @@
+#!/bin/bash
+# (python evaluate.py simple_deception models 1)
+(python evaluate.py simple models 1)
+
