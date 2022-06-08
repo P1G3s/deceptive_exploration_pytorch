@@ -1,5 +1,4 @@
 import torch.nn as nn
-import torch.nn as nn
 from torch import FloatTensor
 from torch import Tensor
 from torch.autograd import Variable
@@ -60,13 +59,25 @@ class DDPGAgent(object):
         Take a step forward in environment for a minibatch of observations
         Inputs:
             obs (PyTorch Variable): Observations for this agent
-            explore (boolean): Whether or not to add exploration noise
+            explore (boolean): Whether or not to add exploration noise 
         Outputs:
             action (PyTorch Variable): Actions for this agent
         """
-        action = self.policy(obs)
-        softmax = nn.Softmax(dim=1)
-        action = softmax(action)
+        #! customized continious action (discrete_action_space = True, discrete_action_input = False)
+        if not self.discrete_action:
+            action = self.policy(obs)
+            softmax = nn.Softmax(dim=1)
+            action = softmax(action)
+            if explore:
+                action += Variable(Tensor(self.exploration.noise()),
+                                   requires_grad=False)
+        else:
+            print("WARNING: DISCRETE")
+            print("WARNING: DISCRETE")
+            print("WARNING: DISCRETE")
+            print("WARNING: DISCRETE")
+            print("WARNING: DISCRETE")
+        
         # if self.discrete_action:
         #     if explore:
         #         action = gumbel_softmax(action, hard=True)
@@ -77,6 +88,7 @@ class DDPGAgent(object):
         #         action += Variable(Tensor(self.exploration.noise()),
         #                            requires_grad=False)
         #     action = action.clamp(-1, 1)
+
         return action
 
     def get_params(self):

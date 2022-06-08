@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -r ./models/simple_deception/*
+rm -r ./models/simple/*
+# (python main.py simple ./models)
+(python main.py simple_deception ./models --n_rollout_threads 1 --n_training_threads 6 --train_render)

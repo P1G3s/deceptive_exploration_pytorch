@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from gym.spaces import Box, Discrete
 from utils.networks import MLPNetwork
@@ -94,12 +95,17 @@ class MADDPG(object):
         """
         obs, acs, rews, next_obs, dones = sample
         curr_agent = self.agents[agent_i]
+        softmax_fn = nn.Softmax(dim=1)
 
         curr_agent.critic_optimizer.zero_grad()
         if self.alg_types[agent_i] == 'MADDPG':
             if self.discrete_action: # one-hot encode action
-                all_trgt_acs = [onehot_from_logits(pi(nobs)) for pi, nobs in
+                # all_trgt_acs = [onehot_from_logits(pi(nobs)) for pi, nobs in
+                #                 zip(self.target_policies, next_obs)]
+                # changing "one-hot encoded action" to "softmax-encoded action" (no longer discrete)
+                all_trgt_acs = [pi(nobs) for pi, nobs in
                                 zip(self.target_policies, next_obs)]
+                all_trgt_acs[0] = softmax_fn(all_trgt_acs[0])
             else:
                 all_trgt_acs = [pi(nobs) for pi, nobs in zip(self.target_policies,
                                                              next_obs)]
@@ -150,7 +156,10 @@ class MADDPG(object):
                 if i == agent_i:
                     all_pol_acs.append(curr_pol_vf_in)
                 elif self.discrete_action:
-                    all_pol_acs.append(onehot_from_logits(pi(ob)))
+                # changing "one-hot encoded action" to "softmax-encoded action" (no longer discrete)
+                    # all_pol_acs.append(onehot_from_logits(pi(ob)))
+                    all_pol_acs.append(softmax_fn((pi(ob))))
+                    
                 else:
                     all_pol_acs.append(pi(ob))
             vf_in = torch.cat((*obs, *all_pol_acs), dim=1)
@@ -245,9 +254,12 @@ class MADDPG(object):
             if isinstance(acsp, Box):
                 discrete_action = False
                 get_shape = lambda x: x.shape[0]
-            else:  # Discrete
-                discrete_action = True
+            else: # Half Discrete Scenario(discrete_action_space = True, discrete_action_input = False)
+                discrete_action = False
                 get_shape = lambda x: x.n
+            # else:  # Discrete
+            #     discrete_action = True
+            #     get_shape = lambda x: x.n
             num_out_pol = get_shape(acsp)
             if algtype == "MADDPG":
                 num_in_critic = 0

@@ -13,7 +13,6 @@ from utils.env_wrappers import SubprocVecEnv, DummyVecEnv
 from algorithms.maddpg import MADDPG
 
 USE_CUDA = False  # torch.cuda.is_available()
-RENDER = False
 
 def make_parallel_env(env_id, n_rollout_threads, seed, discrete_action):
     def get_env_fn(rank):
@@ -75,7 +74,7 @@ def run(config):
                                             ep_i + 1 + config.n_rollout_threads,
                                             config.n_episodes))
         for et_i in range(config.episode_length):
-            if (RENDER):
+            if (config.train_render):
                 env.render()
                 time.sleep(0.01)
             # rearrange observations to be per agent, and convert to torch Variable
@@ -158,6 +157,7 @@ if __name__ == '__main__':
     parser.add_argument("--discrete_action",
                         default="False",
                         type=bool)
+    parser.add_argument("--train_render", action='store_true')
 
     config = parser.parse_args()
 
