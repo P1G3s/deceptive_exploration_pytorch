@@ -1,3 +1,4 @@
 #!/bin/bash
 rm -r ./models/simple_deception/models 
 cp -r ./server/bin/maddpg-pytorch/models/simple_deception/models ./models/simple_deception/
+# cp -r ./server/bin/maddpg-pytorch/models/simple/models ./models/simple/

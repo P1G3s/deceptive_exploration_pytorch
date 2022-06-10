@@ -282,11 +282,11 @@ class MADDPG(object):
         return instance
 
     @classmethod
-    def init_from_save(cls, filename):
+    def init_from_save(cls, filename, location='cpu'):
         """
         Instantiate instance of this class from file created by 'save' method
         """
-        save_dict = torch.load(filename)
+        save_dict = torch.load(filename,map_location=torch.device(location))
         instance = cls(**save_dict['init_dict'])
         instance.init_dict = save_dict['init_dict']
         for a, params in zip(instance.agents, save_dict['agent_params']):

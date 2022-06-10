@@ -72,11 +72,11 @@ class DDPGAgent(object):
                 action += Variable(Tensor(self.exploration.noise()),
                                    requires_grad=False)
         else:
-            print("WARNING: DISCRETE")
-            print("WARNING: DISCRETE")
-            print("WARNING: DISCRETE")
-            print("WARNING: DISCRETE")
-            print("WARNING: DISCRETE")
+            print("WARNING: DISCRETE ACTION")
+            print("WARNING: DISCRETE ACTION")
+            print("WARNING: DISCRETE ACTION")
+            print("WARNING: DISCRETE ACTION")
+            print("WARNING: DISCRETE ACTION")
         
         # if self.discrete_action:
         #     if explore:

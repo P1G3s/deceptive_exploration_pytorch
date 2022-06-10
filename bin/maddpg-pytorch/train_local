@@ -2,4 +2,5 @@
 rm -r ./models/simple_deception/*
 rm -r ./models/simple/*
 # (python main.py simple ./models)
-(python main.py simple_deception ./models --n_rollout_threads 1 --n_training_threads 6 --train_render)
+(python main.py simple_deception ./models --n_rollout_threads 1 --n_training_threads 6 --lr 0.01 --tau 0.1 --n_episodes 10000 --episode_length 100 --train_render)
+# (python main.py simple_deception ./models --n_rollout_threads 1 --n_training_threads 6 --lr 0.01 --tau 0.1 --n_episodes 4000 --episode_length 100)

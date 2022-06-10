@@ -12,7 +12,7 @@ from utils.buffer import ReplayBuffer
 from utils.env_wrappers import SubprocVecEnv, DummyVecEnv
 from algorithms.maddpg import MADDPG
 
-USE_CUDA = False  # torch.cuda.is_available()
+USE_CUDA = torch.cuda.is_available()
 
 def make_parallel_env(env_id, n_rollout_threads, seed, discrete_action):
     def get_env_fn(rank):
@@ -132,22 +132,22 @@ if __name__ == '__main__':
     parser.add_argument("--seed",
                         default=1, type=int,
                         help="Random seed")
-    parser.add_argument("--n_rollout_threads", default=1, type=int)
-    parser.add_argument("--n_training_threads", default=6, type=int)
+    parser.add_argument("--n_rollout_threads", default=3, type=int)
+    parser.add_argument("--n_training_threads", default=12, type=int)
     parser.add_argument("--buffer_length", default=int(1e6), type=int)
     parser.add_argument("--n_episodes", default=10000, type=int)
-    parser.add_argument("--episode_length", default=50, type=int)
+    parser.add_argument("--episode_length", default=100, type=int)
     parser.add_argument("--steps_per_update", default=100, type=int)
     parser.add_argument("--batch_size",
                         default=1024, type=int,
                         help="Batch size for model training")
-    parser.add_argument("--n_exploration_eps", default=25000, type=int)
-    parser.add_argument("--init_noise_scale", default=0.4, type=float)
+    parser.add_argument("--n_exploration_eps", default=50000, type=int)
+    parser.add_argument("--init_noise_scale", default=1, type=float)
     parser.add_argument("--final_noise_scale", default=0.0, type=float)
     parser.add_argument("--save_interval", default=1000, type=int)
-    parser.add_argument("--hidden_dim", default=64, type=int)
-    parser.add_argument("--lr", default=0.001, type=float)
-    parser.add_argument("--tau", default=0.1, type=float)
+    parser.add_argument("--hidden_dim", default=128, type=int)
+    parser.add_argument("--lr", default=0.01, type=float)
+    parser.add_argument("--tau", default=0.01, type=float)
     parser.add_argument("--agent_alg",
                         default="MADDPG", type=str,
                         choices=['MADDPG', 'DDPG'])

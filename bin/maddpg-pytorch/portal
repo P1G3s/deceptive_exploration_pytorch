@@ -1,5 +1,8 @@
 #!/bin/bash
-ip=$(sed -n '1p' ~/.server_profile)
-port=$(sed -n '2p' ~/.server_profile)
-export SSH_ASKPASS="/home/p1g3s/.server_password"
-setsid sshfs -p ${port} root@${ip}:/private/deceptive-exploration-pytorch ./server
+# ip=$(sed -n '1p' ~/.server_profile)
+# port=$(sed -n '2p' ~/.server_profile)
+# export SSH_ASKPASS="/home/p1g3s/.server_password"
+ip=172.22.121.55
+user=labor
+port=22
+sshfs -p ${port} ${user}@${ip}:/home/${user}/deceptive_exploration_pytorch ./server
