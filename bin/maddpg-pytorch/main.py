@@ -52,6 +52,7 @@ def run(config):
                             config.discrete_action)
     maddpg = MADDPG.init_from_env(env, agent_alg=config.agent_alg,
                                   adversary_alg=config.adversary_alg,
+                                  gamma=config.gamma,
                                   tau=config.tau,
                                   lr=config.lr,
                                   hidden_dim=config.hidden_dim)
@@ -148,6 +149,7 @@ if __name__ == '__main__':
     parser.add_argument("--hidden_dim", default=128, type=int)
     parser.add_argument("--lr", default=0.01, type=float)
     parser.add_argument("--tau", default=0.01, type=float)
+    parser.add_argument("--gamma", default=0.99, type=float)
     parser.add_argument("--agent_alg",
                         default="MADDPG", type=str,
                         choices=['MADDPG', 'DDPG'])

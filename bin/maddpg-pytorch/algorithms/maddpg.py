@@ -95,7 +95,7 @@ class MADDPG(object):
         """
         obs, acs, rews, next_obs, dones = sample
         curr_agent = self.agents[agent_i]
-        softmax_fn = nn.Softmax(dim=1)
+        # softmax_fn = nn.Softmax(dim=1)
 
         curr_agent.critic_optimizer.zero_grad()
         if self.alg_types[agent_i] == 'MADDPG':
@@ -105,7 +105,7 @@ class MADDPG(object):
                 # changing "one-hot encoded action" to "softmax-encoded action" (no longer discrete)
                 all_trgt_acs = [pi(nobs) for pi, nobs in
                                 zip(self.target_policies, next_obs)]
-                all_trgt_acs[0] = softmax_fn(all_trgt_acs[0])
+                # all_trgt_acs[0] = softmax_fn(all_trgt_acs[0])
             else:
                 all_trgt_acs = [pi(nobs) for pi, nobs in zip(self.target_policies,
                                                              next_obs)]
@@ -158,7 +158,8 @@ class MADDPG(object):
                 elif self.discrete_action:
                 # changing "one-hot encoded action" to "softmax-encoded action" (no longer discrete)
                     # all_pol_acs.append(onehot_from_logits(pi(ob)))
-                    all_pol_acs.append(softmax_fn((pi(ob))))
+                    # all_pol_acs.append(softmax_fn((pi(ob))))
+                    all_pol_acs.append(pi(ob))
                     
                 else:
                     all_pol_acs.append(pi(ob))

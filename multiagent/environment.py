@@ -171,6 +171,9 @@ class MultiAgentEnv(gym.Env):
                     action[0][:] = 0.0
                     action[0][d] = 1.0
                 if self.discrete_action_space:
+                    # softmax
+                    softmax_sum = sum([abs(act) for act in action[0]])
+                    action[0] = [(act/softmax_sum) for act in action[0]]
                     agent.action.u[0] += action[0][1] - action[0][2]
                     agent.action.u[1] += action[0][3] - action[0][4]
                 else:

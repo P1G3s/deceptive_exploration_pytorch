@@ -175,8 +175,8 @@ class Scenario(BaseScenario):
             obs = np.concatenate(
                     [friendly_agent.goal_a.state.p_pos - friendly_agent.state.p_pos] + \
                     [adversary_agent.state.p_pos - friendly_agent.state.p_pos] + \
-                    entity_pos_rel_adversary + \
                     entity_pos)
+                    # entity_pos_rel_adversary + \
                     # [[world.steps_count]] + \
             return obs
         else:
@@ -187,8 +187,8 @@ class Scenario(BaseScenario):
                 entity_pos_rel_friendly.append(entity.state.p_pos - friendly_agent.state.p_pos)
             obs = np.concatenate( 
                     [adversary_agent.state.p_pos - friendly_agent.state.p_pos] + \
-                    entity_pos_rel_friendly + \
                     entity_pos)
+                    # entity_pos_rel_friendly + \
                     # [[world.steps_count]] + \
             return obs
 
