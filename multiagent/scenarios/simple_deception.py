@@ -77,10 +77,10 @@ class Scenario(BaseScenario):
             agent.state.c = np.zeros(world.dim_c)
         interval = (world.right_boundry - world.left_boundry)/4    # interval between landmarks
         for i, landmark in enumerate(world.landmarks):  # spawn landmarks on the upper half
-            #landmark.state.p_pos = np.random.uniform(-2.5, +2.5, world.dim_p)
             landmark.state.p_pos = np.zeros(world.dim_p)
+            # landmark.state.p_pos[0] = random.uniform(world.left_boundry, world.right_boundry)
             landmark.state.p_pos[0] = world.center-interval + (interval*i)      # x
-            # landmark.state.p_pos[1] = random.uniform(world.top_boundry-0.5, world.center+0.5)     # y
+            # landmark.state.p_pos[1] = random.uniform(world.top_boundry-0.3, world.center+0.3)     # y
             landmark.state.p_pos[1] = (world.top_boundry + world.center)/2     # y
             landmark.state.p_vel = np.zeros(world.dim_p)
         adversary_agent = self.adversaries(world)[0]
