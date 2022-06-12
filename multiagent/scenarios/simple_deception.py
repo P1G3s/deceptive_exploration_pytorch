@@ -1,5 +1,5 @@
 import numpy as np 
-from multiagent.core import World, Agent, Landmark
+from multiagent.core import World, Agent, Landmark, Wall
 from multiagent.scenario import BaseScenario
 import random
 
@@ -16,7 +16,22 @@ class Scenario(BaseScenario):
         world.num_agents = num_agents
         num_adversaries = 1
         num_landmarks = 3 #num_agents - 1
-        world.boundry = 5
+        world.boundry = 1.5
+        # add walls
+        world.walls = [None for i in range(4)]
+        world.walls[0] = Wall(orient='H', axis_pos=world.boundry,
+                              endpoints=(-world.boundry, world.boundry),
+                              width=0.1) # TOP
+        world.walls[1] = Wall(orient='H', axis_pos=-world.boundry,
+                              endpoints=(-world.boundry, world.boundry),
+                              width=0.1) # BOTTOM
+        world.walls[2] = Wall(orient='V', axis_pos=world.boundry,
+                              endpoints=(-world.boundry, world.boundry),
+                              width=0.1) # RIGHT
+        world.walls[3] = Wall(orient='V', axis_pos=-world.boundry,
+                              endpoints=(-world.boundry, world.boundry),
+                              width=0.1) # LEFT
+
         # add agents
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
@@ -40,7 +55,6 @@ class Scenario(BaseScenario):
     def reset_world(self, world):
         # random properties for agents
         world.steps_count = 0
-        world.boundry = 1.5
         world.left_boundry = -world.boundry
         world.top_boundry = +world.boundry
         world.bottom_boundry = -world.boundry
@@ -120,17 +134,16 @@ class Scenario(BaseScenario):
         # distance between friendly and goal
         f2g_dist = np.sqrt(np.sum(np.square(agent.state.p_pos - agent.goal_a.state.p_pos)))
         # rew = (-(gamma*f2g_dist - world.last_f2g_dist))
-        rew = -f2g_dist
-        # rew = -1
+        # rew = -f2g_dist
+        rew = -1
         world.last_f2a_dist = f2a_dist
         world.last_f2g_dist = f2g_dist
-        if ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
-            rew -= 100
-        elif (f2a_dist < adversary_agent.size):
-            rew -= 100  #!! trying smaller reward?
-        elif (f2g_dist < agent.goal_a.size):
-            rew += 300
-        # rew -= steps_penalty_ratio * (world.steps_count^2)
+        # if ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
+        #     rew -= 100
+        # elif (f2a_dist < adversary_agent.size):
+        #     rew -= 100  #!! trying smaller reward?
+        # elif (f2g_dist < agent.goal_a.size):
+        #     rew += 300
         # rew = round(rew,3)
             
         return rew
@@ -144,12 +157,12 @@ class Scenario(BaseScenario):
         # rew = (-(gamma*f2a_dist - world.last_f2a_dist))
         rew = -f2a_dist
         # rew = -1
-        if ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
-            rew -= 100 
-        elif (f2a_dist < agent.size):
-            rew += 300
+        # if ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
+        #     rew -= 100 
+        if (f2a_dist < agent.size):
+            rew += 1
         elif (f2g_dist < agent.goal_a.size):
-            rew -= 100
+            rew -= 1
         # rew = round(rew,3)
         return rew
 
@@ -202,15 +215,15 @@ class Scenario(BaseScenario):
             f2a_dist = np.sqrt(np.sum(np.square(adversary_agent.state.p_pos - friendly_agent.state.p_pos)))
             if (f2a_dist < adversary_agent.size):
                 return 1
-            elif ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
-                return 1
+            # elif ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
+            #     return 1
         else:
             # distance from friendly_agent to true landmark
             f2g_dist = np.sqrt(np.sum(np.square(friendly_agent.state.p_pos - friendly_agent.goal_a.state.p_pos)))
             if (f2g_dist < friendly_agent.goal_a.size):
                 return 1
-            elif ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
-                return 1
+            # elif ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
+            #     return 1
         return 0
 
 

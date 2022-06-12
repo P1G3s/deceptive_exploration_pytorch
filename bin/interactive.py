@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/python3.9
 import os,sys
 import argparse
 import time
@@ -11,7 +11,7 @@ import multiagent.scenarios as scenarios
 if __name__ == '__main__':
     # parse arguments
     parser = argparse.ArgumentParser(description=None)
-    parser.add_argument('-s', '--scenario', default='simple.py', help='Path of the scenario Python script.')
+    parser.add_argument('-s', '--scenario', default='simple_deception.py', help='Path of the scenario Python script.')
     args = parser.parse_args()
 
     # load scenario from script
@@ -34,7 +34,6 @@ if __name__ == '__main__':
         for i, policy in enumerate(policies):
             act_n.append(policy.action(obs_n[i]))
         # step environment
-        print(act_n)
         obs_n, reward_n, done_n, info_n = env.step(act_n)
         # print("DONE: " + str(done_n[0]) + '\t' + str(done_n[1]))
         # print("OBS: " + str(obs_n[0]) + '\n\t' + str(obs_n[1]))

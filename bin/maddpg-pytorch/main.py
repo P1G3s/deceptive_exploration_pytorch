@@ -61,6 +61,8 @@ def run(config):
                                  [acsp.shape[0] if isinstance(acsp, Box) else acsp.n
                                   for acsp in env.action_space])
     t = 0
+    display_threshold = config.display_rate
+    start_time = time.time()
     for ep_i in range(0, config.n_episodes, config.n_rollout_threads):
         obs = env.reset()
         # obs.shape = (n_rollout_threads, nagent)(nobs), nobs differs per agent so not tensor
@@ -70,10 +72,12 @@ def run(config):
         maddpg.scale_noise(config.final_noise_scale + (config.init_noise_scale - config.final_noise_scale) * explr_pct_remaining)
         maddpg.reset_noise()
 
-        if ((ep_i % 1000) == 0):
-            print("Episodes %i-%i of %i" % (ep_i + 1,
-                                            ep_i + 1 + config.n_rollout_threads,
-                                            config.n_episodes))
+        if (ep_i >= display_threshold):
+            print("Episodes %i-%i, Time:%i" % (ep_i - config.display_rate,
+                                            ep_i,
+                                            time.time()-start_time))
+            display_threshold += display_rate
+            start_time = time.time()
         for et_i in range(config.episode_length):
             if (config.train_render):
                 env.render()
@@ -160,6 +164,7 @@ if __name__ == '__main__':
                         default="False",
                         type=bool)
     parser.add_argument("--train_render", action='store_true')
+    parser.add_argument("--display_rate", default=1000, type=int)
 
     config = parser.parse_args()
 
