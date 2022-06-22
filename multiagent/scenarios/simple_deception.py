@@ -77,15 +77,15 @@ class Scenario(BaseScenario):
             #agent.state.p_pos = np.random.uniform(-2.5, +2.5, world.dim_p)
             agent.state.p_pos = np.zeros(world.dim_p)
             if (agent.adversary):   # spawn defender on the upper half
-                # agent.state.p_pos[0] = random.uniform(world.left_boundry, world.right_boundry)   # x
-                # agent.state.p_pos[1] = random.uniform(world.center+0.2, world.top_boundry-0.2)   # y
-                agent.state.p_pos[0] = 0   # x
-                agent.state.p_pos[1] = (world.center + world.top_boundry)/2 + 0.2   # y
+                agent.state.p_pos[0] = random.uniform(world.left_boundry, world.right_boundry)   # x
+                agent.state.p_pos[1] = random.uniform(world.center+0.2, world.top_boundry-0.2)   # y
+                # agent.state.p_pos[0] = 0   # x
+                # agent.state.p_pos[1] = (world.center + world.top_boundry)/2 + 0.2   # y
             else:   # spawn invader at the bottom
-                # agent.state.p_pos[0] = random.uniform(world.left_boundry, world.right_boundry)   # x
-                # agent.state.p_pos[1] = random.uniform(world.center-0.2, world.bottom_boundry+0.2)   # y
-                agent.state.p_pos[0] = 0    # x
-                agent.state.p_pos[1] = (world.center + world.bottom_boundry)/2   # y
+                agent.state.p_pos[0] = random.uniform(world.left_boundry, world.right_boundry)   # x
+                agent.state.p_pos[1] = random.uniform(world.center-0.2, world.bottom_boundry+0.2)   # y
+                # agent.state.p_pos[0] = 0    # x
+                # agent.state.p_pos[1] = (world.center + world.bottom_boundry)/2   # y
 
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
@@ -140,10 +140,10 @@ class Scenario(BaseScenario):
         world.last_f2g_dist = f2g_dist
         # if ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
         #     rew -= 100
-        # elif (f2a_dist < adversary_agent.size):
-        #     rew -= 100  #!! trying smaller reward?
-        # elif (f2g_dist < agent.goal_a.size):
-        #     rew += 300
+        if (f2a_dist < adversary_agent.size):
+            rew -= 10  #!! trying smaller reward?
+        elif (f2g_dist < agent.goal_a.size):
+            rew += 30
         # rew = round(rew,3)
             
         return rew
@@ -155,14 +155,15 @@ class Scenario(BaseScenario):
         f2a_dist = np.sqrt(np.sum((np.square(agent.state.p_pos - friendly_agent.state.p_pos))))
         f2g_dist = np.sqrt(np.sum(np.square(friendly_agent.state.p_pos - friendly_agent.goal_a.state.p_pos)))
         # rew = (-(gamma*f2a_dist - world.last_f2a_dist))
-        rew = -f2a_dist
+        # rew = -f2a_dist
         # rew = -1
+        rew = 0
         # if ((abs(agent.state.p_pos[0])>world.boundry) or (abs(agent.state.p_pos[1])>world.boundry)):
         #     rew -= 100 
         if (f2a_dist < agent.size):
-            rew += 1
+            rew -= 10
         elif (f2g_dist < agent.goal_a.size):
-            rew -= 1
+            rew -= 100
         # rew = round(rew,3)
         return rew
 
@@ -195,9 +196,9 @@ class Scenario(BaseScenario):
         else:
             entity_pos_rel_friendly = []    # entity position relative to friendly agent
             for entity in world.landmarks:
-                entity_pos.append(entity.state.p_pos - adversary_agent.state.p_pos)
-            for entity in world.landmarks:
                 entity_pos_rel_friendly.append(entity.state.p_pos - friendly_agent.state.p_pos)
+            for entity in world.landmarks:
+                entity_pos.append(entity.state.p_pos - adversary_agent.state.p_pos)
             obs = np.concatenate( 
                     [adversary_agent.state.p_pos - friendly_agent.state.p_pos] + \
                     entity_pos)

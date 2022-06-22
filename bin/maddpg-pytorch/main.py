@@ -76,7 +76,7 @@ def run(config):
             print("Episodes %i-%i, Time:%i" % (ep_i - config.display_rate,
                                             ep_i,
                                             time.time()-start_time))
-            display_threshold += display_rate
+            display_threshold += config.display_rate
             start_time = time.time()
         for et_i in range(config.episode_length):
             if (config.train_render):
@@ -138,22 +138,22 @@ if __name__ == '__main__':
                         default=1, type=int,
                         help="Random seed")
     parser.add_argument("--n_rollout_threads", default=3, type=int)
-    parser.add_argument("--n_training_threads", default=12, type=int)
-    parser.add_argument("--buffer_length", default=int(1e6), type=int)
-    parser.add_argument("--n_episodes", default=10000, type=int)
-    parser.add_argument("--episode_length", default=100, type=int)
-    parser.add_argument("--steps_per_update", default=100, type=int)
+    parser.add_argument("--n_training_threads", default=24, type=int)
+    parser.add_argument("--buffer_length", default=int(1e7), type=int)
+    parser.add_argument("--n_episodes", default=100000, type=int)
+    parser.add_argument("--episode_length", default=80, type=int)
+    parser.add_argument("--steps_per_update", default=80, type=int)
     parser.add_argument("--batch_size",
                         default=1024, type=int,
                         help="Batch size for model training")
-    parser.add_argument("--n_exploration_eps", default=50000, type=int)
-    parser.add_argument("--init_noise_scale", default=1, type=float)
+    parser.add_argument("--n_exploration_eps", default=25000, type=int)
+    parser.add_argument("--init_noise_scale", default=0.6, type=float)
     parser.add_argument("--final_noise_scale", default=0.0, type=float)
     parser.add_argument("--save_interval", default=1000, type=int)
     parser.add_argument("--hidden_dim", default=128, type=int)
     parser.add_argument("--lr", default=0.01, type=float)
     parser.add_argument("--tau", default=0.01, type=float)
-    parser.add_argument("--gamma", default=0.99, type=float)
+    parser.add_argument("--gamma", default=0.97, type=float)
     parser.add_argument("--agent_alg",
                         default="MADDPG", type=str,
                         choices=['MADDPG', 'DDPG'])
